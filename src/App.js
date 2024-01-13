@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
-import { HomeScreen, SplashScreen } from './pages';
+import { HomeScreen, SplashScreen, InputHomeScreen } from './pages';
 
 const App = () => {
   return (
     // <SplashScreen/>
-    <HomeScreen/>
+    // <HomeScreen/>
+    <InputHomeScreen/>
   );
 };
 

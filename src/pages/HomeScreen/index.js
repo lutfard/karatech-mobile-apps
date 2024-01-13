@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { Button } from '../../components';
+import { Ilogopunch, Ilogokick } from '../../assets'
 
 const HomeScreen = () => {
   return (
@@ -7,9 +9,18 @@ const HomeScreen = () => {
         <Text style={style.textWelcome}>Welcome!</Text>
         <Text style={style.textSelect}>Please Select.</Text>
         <View style={style.sectionMenu}>
-            <View style={style.boxMenu}></View>
-            <View style={style.boxMenu}></View>
+            <View style={style.boxMenu}>
+                <Image style={style.imgMenu} source={Ilogopunch} resizeMode='contain'/>
+            </View>
+            <View style={style.boxMenu}>
+                <Image style={style.imgMenu} source={Ilogokick} resizeMode='contain'/>
+            </View>
         </View>
+        <View style={style.sectionMenu}>
+            <Text style={style.txtMenu}>PUNCH</Text>
+            <Text style={style.txtMenu}>KICK</Text>
+        </View>
+        <Button text="Next" onPress={null} style={style.button}/>
     </View>
   );
 };
@@ -41,15 +52,30 @@ const style = StyleSheet.create({
         height: 150,
         width: 150,
         margin: 15,
-        // borderWidth: 2,
-        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 80,
         borderStyle: 'solid',
         borderColor: 'black',
-        borderRadius: 5,
-        elevation: 5, // For Android box shadow
+        borderRadius: 1,
+        elevation: 3, // For Android box shadow
         // shadowColor: '#000', // For iOS box shadow
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.1,
-        shadowRadius: 1,
+        shadowRadius: 0.2,
+    },
+    txtMenu: {
+        marginRight: 65,
+        marginLeft: 65,
+        fontSize: 18,
+        fontWeight: '500'
+    },
+    imgMenu: {
+        width: 90
+    },
+    button: {
+        backgroundColor: 'white',
+        borderColor: '#D7B356',
+        color: '#D7B356'
     }
 })
