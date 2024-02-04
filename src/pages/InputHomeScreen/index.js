@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { Button, OptionTab, Input, DropdownComponent } from '../../components';
 import RNPickerSelect from 'react-native-picker-select';
 
-const InputHomeScreen = () => {
+const InputHomeScreen = ({navigation}) => {
     const selectGender = [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -19,19 +19,24 @@ const InputHomeScreen = () => {
 
     return (
         <View style={style.container}>
-            <Text>Select Side</Text>
+            {/* <TouchableOpacity>
+                <Text style={style.txtBack}>Back</Text>
+            </TouchableOpacity> */}
+            <Input text='Insert Name'/>
+            <DropdownComponent options={selectGender} labelPlaceholder={'Select Gender'}/>
+            <Text style={style.txtOption}>Select Side</Text>
             <View style={style.row}>
                 <OptionTab text='Left'/>
                 <OptionTab text='Right'/>
             </View>
-            <Input text='Insert Name'/>
-            <DropdownComponent options={selectGender} labelPlaceholder={'Select Gender'}/>
+            <Text style={style.txtOption}>Select Parameter</Text>
             <View style={style.row}>
                 <OptionTab text='Reps'/>
                 <OptionTab text='Timer'/>
             </View>
             <DropdownComponent options={selectParam} labelPlaceholder={'Select Time'}/>
-            <Button text='Start' style={style.button} onPress={null}/>
+            <Button text='Start' style={style.button}
+            onPress={() => navigation.navigate('Home')}/>
         </View>
     );
 };
@@ -45,14 +50,24 @@ const style = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        backgroundColor: '#D7B356',
-        borderColor: '#D7B356',
+        backgroundColor: '#1D1C68',
+        borderColor: '#1D1C68',
         color: 'white'
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    }
+    },
+    txtOption: {
+        fontSize: 18,
+        fontWeight: 400,
+        marginTop: 20,
+    },
+    txtBack: {
+        fontSize: 16,
+        fontWeight: 600,
+        alignSelf: 'flex-start'
+    },
 })
 
 export default InputHomeScreen;

@@ -5,11 +5,11 @@ import { Ilogo } from '../../assets';
 const SplashScreen = () => {
   return (
     <View style={style.container}>
-        <Image source={Ilogo}/>
-        <View style={style.inlineContainer}>
+        <Image source={Ilogo} style={style.imgLogo} resizeMode='contain'/>
+        {/* <View style={style.inlineContainer}>
             <Text style={style.appNameWhite}>kara</Text>
             <Text style={style.appNameGold}>tech</Text>
-        </View>
+        </View> */}
         <Text style={style.tagLine}>P U S H   Y O U R   L I M I T</Text>
     </View>
   );
@@ -19,7 +19,7 @@ const SplashScreen = () => {
 const style = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        backgroundColor: '#3A4750', 
+        backgroundColor: '#fff', 
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'},
@@ -39,7 +39,10 @@ const style = StyleSheet.create({
     },
     tagLine: {
         fontSize: 16,
-        color: 'white'
+        color: '#1D1C68'
+    },
+    imgLogo: {
+        width: 400
     }
 })
 
