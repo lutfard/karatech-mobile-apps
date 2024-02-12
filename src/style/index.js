@@ -55,5 +55,13 @@ const general = StyleSheet.create({
         },
 })
 
+const clearSpace = StyleSheet.create({
+    10: { height: 10 },
+    20: { height: 20 },
+    30: { height: 30 },
+    40: { height: 40 },
+    50: { height: 50 },
+});
 
-export { textSize, textWeight, flexDirection, general, colorPallete };
+
+export { textSize, textWeight, flexDirection, general, colorPallete, clearSpace };

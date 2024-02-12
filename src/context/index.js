@@ -51,12 +51,12 @@ const AppProvider = ({children}) => {
         setParamGender(newValue);
     };
 
-    const [paramSide, setParamSide] = useState(null);
+    const [paramSide, setParamSide] = useState('Left');
     const updateParamSide = (newValue) => {
         setParamSide(newValue);
     };
 
-    const [paramLimit, setParamLimit] = useState(null);
+    const [paramLimit, setParamLimit] = useState('Reps');
     const updateParamLimit = (newValue) => {
         setParamLimit(newValue);
     };

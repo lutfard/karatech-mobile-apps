@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import PropTypes from 'prop-types';
 import RNPickerSelect from 'react-native-picker-select';
+import { useAppContext } from '../../../context';
 
 
-const DropdownComponent = ({ options, labelPlaceholder }) => {
-    const [selectedValue, setSelectedValue] = useState(null);
+const DropdownComponent = ({ options, labelPlaceholder, setAction }) => {
+    // const [selectedValue, setSelectedValue] = useState(null);
+    // const { paramGender, updateParamgender } = useAppContext();
     const placeholder = {
         label: labelPlaceholder,
         value: null,
@@ -22,13 +25,18 @@ const DropdownComponent = ({ options, labelPlaceholder }) => {
             <RNPickerSelect
                 placeholder={placeholder}
                 items={options}
-                onValueChange={(value) => setSelectedValue(value)}
+                onValueChange={setAction}
             />
         </View>
         
     );
     };
 
+
+DropdownComponent.propTypes = {
+    options: PropTypes.object.isRequired,
+    setAction: PropTypes.func
+};
 
 const styles = StyleSheet.create({
     input: {

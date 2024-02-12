@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
+import { useAppContext } from '../../../context';
 
-const OptionTab = ({text, style}) => {
+const OptionTab = ({style, text, setAction}) => {
+  // const { paramSide, updateParamSide } = useAppContext();
+
   return (
-    <TouchableOpacity style={[styles.Button, style]}>
+    <TouchableOpacity style={[styles.Button, style]} onPress={setAction}>
       <Text style={[styles.txtButton, style]}>{text}</Text>
     </TouchableOpacity>
   );
@@ -12,7 +15,7 @@ const OptionTab = ({text, style}) => {
 
 OptionTab.propTypes = {
     text: PropTypes.string.isRequired,
-    // onPress: PropTypes.func,
+    setAction: PropTypes.func.isRequired,
     style: PropTypes.object,
   };
 

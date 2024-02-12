@@ -71,6 +71,10 @@ Item.propTypes = {
 const ResultScreen = () => {
     const { dataResult } = useAppContext();
     const { paramName } = useAppContext();
+    const { paramGender } = useAppContext();
+    const { paramAction } = useAppContext();
+    const { paramSide } = useAppContext();
+    const { paramLimitValue } = useAppContext();
 
     return (
         <View style={styles.container}>
@@ -81,14 +85,14 @@ const ResultScreen = () => {
                     <Image source={iconUser} resizeMode='contain'/>
                     <Text style={[ styles.textName, textSize[18], textWeight[500] ]}>  {paramName}</Text>
                     <Text style={textSize[18]}> / </Text>
-                    <Text style={textSize[18]}>male</Text>
+                    <Text style={textSize[18]}>{paramGender}</Text>
                 </View>
                 <View style={flexDirection.row}>
                     <Image source={iconTimer} resizeMode='contain'/>
-                    <Text style={textSize[18]}>  30 seconds</Text>
+                    <Text style={textSize[18]}>  {paramLimitValue}</Text>
                 </View>
                 <View style={styles.textBox}>
-                    <Text style={{color:colorPallete.white}}>Left Punch</Text>
+                    <Text style={{color:colorPallete.white}}>{paramSide} {paramAction}</Text>
                 </View>
             </View>
             <FlatList
