@@ -23,10 +23,10 @@ const styles = StyleSheet.create({
         width: 190,
         height: 50,
         borderRadius: 50,
-        borderWidth: 3,
+        borderWidth: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 75
+        margin: 5
     },
     txtButton: {
         fontSize: 18,

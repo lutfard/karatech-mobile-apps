@@ -32,15 +32,15 @@ const colorPallete = {
 }
 
 const flexDirection = StyleSheet.create({
-    row: { flexDirection: 'row', marginBottom: 10, justifyContent:'center', alignItems:'center' },
+    row: { flexDirection: 'row'},
     column: { flexDirection: 'column' },
 })
 
 const general = StyleSheet.create({
     card: {
-        width: 330,
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        // width: 330,
+        // marginLeft: 'auto',
+        // marginRight: 'auto',
         borderRadius: 10, // Adjust the border radius as needed
         shadowColor: '#000',
         shadowOffset: {
@@ -50,7 +50,7 @@ const general = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5, // This property is for Android shadow
-        padding: 20, // Adjust padding as needed
+        // padding: 20, // Adjust padding as needed
         backgroundColor: '#fff', // Adjust background color as needed
         },
 })

@@ -3,56 +3,59 @@ import { StyleSheet, Text, View, Image, FlatList} from 'react-native';
 import { Line, Button, Card } from '../../components';
 import { iconTimer, iconUser } from '../../assets';
 import PropTypes from 'prop-types';
+import { useAppContext } from '../../context';
 import { textSize, textWeight, flexDirection, general, colorPallete, } from '../../style';
 
-const DATA = [
-    {
-        axisX: 2390,
-        axisY: 2390,
-        axisZ: 2390,
-        speed: 200
-    },
-    {
-        axisX: 7832,
-        axisY: 5434,
-        axisZ: 5224,
-        speed: 205
-    },
-    {
-        axisX: 7832,
-        axisY: 5434,
-        axisZ: 5224,
-        speed: 205
-    },
-    {
-        axisX: 7832,
-        axisY: 5434,
-        axisZ: 5224,
-        speed: 205
-    } ,
-    {
-        axisX: 7832,
-        axisY: 5434,
-        axisZ: 5224,
-        speed: 205
-    }      
-];
+// const DATA = [
+//     {
+//         axisX: 2390,
+//         axisY: 2390,
+//         axisZ: 2390,
+//         speed: 200
+//     },
+//     {
+//         axisX: 7832,
+//         axisY: 5434,
+//         axisZ: 5224,
+//         speed: 205
+//     },
+//     {
+//         axisX: 7832,
+//         axisY: 5434,
+//         axisZ: 5224,
+//         speed: 205
+//     },
+//     {
+//         axisX: 7832,
+//         axisY: 5434,
+//         axisZ: 5224,
+//         speed: 205
+//     } ,
+//     {
+//         axisX: 7832,
+//         axisY: 5434,
+//         axisZ: 5224,
+//         speed: 205
+//     }      
+// ];
+
+
 
 const DataValue = ({label, value}) => (
     <View style={flexDirection.row}>
         <View style={styles.boxLabel}>
-            <Text style={[{color: colorPallete.black}, textWeight[500], textSize[14]]}>{label}</Text>
+            <Text style={[{color: colorPallete.white}, textWeight[500], textSize[14]]}>{label}</Text>
         </View>
-        <Text style={[{marginRight:15}, textSize[14], textWeight[500]]}>{value}</Text>
+        <Text style={[{marginRight:15, width: 40}, textSize[14], textWeight[500]]}>{value}</Text>
     </View>
 );
 
 const Item = ({x, y, z, speed}) => (
     <View style={styles.item}>
         <View style={flexDirection.row}>
-            <DataValue label='x' value={x}/>
-            <DataValue label='y' value={y}/>
-            <DataValue label='z' value={z}/>
+            <DataValue label='X' value={x}/>
+            <DataValue label='Y' value={y}/>
+            <DataValue label='Z' value={z}/>
             <Text style={[{color:colorPallete.black}, textSize[18], textWeight[800]]}>{speed} m/s</Text>
         </View>
     </View>
@@ -66,6 +69,9 @@ Item.propTypes = {
   };
 
 const ResultScreen = () => {
+    const { dataResult } = useAppContext();
+    const { paramName } = useAppContext();
+
     return (
         <View style={styles.container}>
             <Text style={styles.txtTitle}>Result</Text>
@@ -73,7 +79,7 @@ const ResultScreen = () => {
             <View style={[styles.card, general.card]}>
                 <View style={flexDirection.row}>
                     <Image source={iconUser} resizeMode='contain'/>
-                    <Text style={[ styles.textName, textSize[18], textWeight[500] ]}>  Lutfi Ardiansyah</Text>
+                    <Text style={[ styles.textName, textSize[18], textWeight[500] ]}>  {paramName}</Text>
                     <Text style={textSize[18]}> / </Text>
                     <Text style={textSize[18]}>male</Text>
                 </View>
@@ -86,11 +92,16 @@ const ResultScreen = () => {
                 </View>
             </View>
             <FlatList
-                    data={DATA}
-                    renderItem={({item}) => <Item x={item.axisX} y={item.axisY} z={item.axisZ} speed={item.speed} />}
+                    data={dataResult.DATA}
+                    renderItem={({item}) => <Item x={item.AXIS_X} y={item.AXIS_Y} z={item.AXIS_Z} speed={item.SPEED} />}
                     // keyExtractor={item => item.speed}
                 />
-            <Button text='nana' onPress={null} style={styles.button}/>
+                {/* <Text>{JSON.stringify(dataResult)}</Text> */}
+            {/* <Text>{paramName}</Text> */}
+            <View style={flexDirection.row}>
+                <Button text='save' onPress={null} style={styles.btnSave}/>
+                <Button text='delete' onPress={null} style={styles.btnDelete}/>
+            </View>
         </View>
     );
 };
@@ -105,6 +116,7 @@ const styles = StyleSheet.create({
     },
     card: {
         marginBottom: 20,
+        padding: 20
     },
     txtTitle: {
         fontSize: 28,
@@ -116,11 +128,21 @@ const styles = StyleSheet.create({
     textName: {
         color: 'black',
     },
-    button: {
-        marginTop: 10,
-        backgroundColor: '#1D1C68',
-        borderColor: '#1D1C68',
-        color: 'white'
+    btnSave: {
+        // marginTop: 10,
+        borderRadius: 50,
+        backgroundColor: 'green',
+        borderColor: 'green',
+        color: 'white',
+        width: 160,
+    },
+    btnDelete: {
+        // marginTop: 10,
+        borderRadius: 50,
+        backgroundColor: 'red',
+        borderColor: 'red',
+        color: 'white',
+        width: 160,
     },
     textBox: {
         width: 290,

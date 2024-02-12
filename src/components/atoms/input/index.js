@@ -1,18 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View} from 'react-native';
 import PropTypes from 'prop-types';
+import { useAppContext } from '../../../context'; 
+import { AppProvider } from '../../../context';
 
 
-const Input = ( {text} ) => {
+const Input = ( {txtPlaceholder, value, setAction } ) => {
+    // const { paramName, setParamName } = useAppContext();
+
+
   return (
-    <View style={styles.input}>
-        <TextInput style={styles.txtInput} placeholder={text}></TextInput>
+    <AppProvider>
+        <View style={styles.input}>
+        <TextInput style={styles.txtInput} placeholder={txtPlaceholder} value={value} onChangeText={setAction}></TextInput>
     </View>
+    </AppProvider>
   );
 };
 
 Input.propTypes = {
-    text: PropTypes.string.isRequired,
+    txtPlaceholder: PropTypes.string.isRequired,
+    setAction: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

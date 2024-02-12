@@ -1,12 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet, Text, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import { HomeScreen, SplashScreen, InputHomeScreen, LoadingScreen, ResultScreen, OverlayExample } from './pages';
+import { NavigationContainer } from '@react-navigation/native';
+import SplashScreen from 'react-native-splash-screen';
+import { HomeScreen, InputHomeScreen, LoadingScreen, ResultScreen, OverlayExample, AppNavigator, HistoryScreen } from './pages';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AppProvider } from './context';
 
-const Stack = createNativeStackNavigator();
+
+// function Home() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//     <HomeScreen/>
+//   </View>
+//   );
+// }
+
+// function InputHome() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <InputHomeScreen/>
+//     </View>
+//   );
+// }
+
+// const Stack = createNativeStackNavigator();
+// const Tab = createBottomTabNavigator();
+
+
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     // <NavigationContainer>
     //    {/* <SplashScreen/> */}
@@ -15,16 +42,18 @@ const App = () => {
     //  {/* <LoadingScreen/> */}
     // <ResultScreen/>
     // </NavigationContainer>
+    // <HistoryScreen/>
 
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name='Home' component={HomeScreen} />
-        <Stack.Screen name='InputHome' component={InputHomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-
-    // <OverlayExample/>
-
+    // <NavigationContainer>
+    //   <Tab.Navigator>
+    //     <Tab.Screen name="Home" component={stackNavigate} />
+    //     <Tab.Screen name="InputHome" component={InputHomeScreen} />
+    //   </Tab.Navigator>
+    // </NavigationContainer>
+    <AppProvider>
+      <AppNavigator/>
+    </AppProvider>
+    
   );
 };
 

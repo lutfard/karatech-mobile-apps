@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { Button, OptionTab, Input, DropdownComponent } from '../../components';
-import RNPickerSelect from 'react-native-picker-select';
+import { useNavigation } from '@react-navigation/native';
+import { useAppContext } from '../../context';
 
-const InputHomeScreen = ({navigation}) => {
+const InputHomeScreen = () => {
+    const { paramName, updateParamName } = useAppContext();
+
     const selectGender = [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -17,12 +20,19 @@ const InputHomeScreen = ({navigation}) => {
 
     const txtPlaceholder = 'Select Gender';
 
+    const navigation = useNavigation();
+
+    const btnStartPress = () => {
+        updateParamName(paramName);
+        navigation.navigate('ResultScreen');
+    };
+
     return (
         <View style={style.container}>
             {/* <TouchableOpacity>
                 <Text style={style.txtBack}>Back</Text>
             </TouchableOpacity> */}
-            <Input text='Insert Name'/>
+            <Input txtPlaceholder='Insert Name' value={paramName} setAction={updateParamName}/>
             <DropdownComponent options={selectGender} labelPlaceholder={'Select Gender'}/>
             <Text style={style.txtOption}>Select Side</Text>
             <View style={style.row}>
@@ -36,7 +46,7 @@ const InputHomeScreen = ({navigation}) => {
             </View>
             <DropdownComponent options={selectParam} labelPlaceholder={'Select Time'}/>
             <Button text='Start' style={style.button}
-            onPress={() => navigation.navigate('Home')}/>
+            onPress={btnStartPress}/>
         </View>
     );
 };
