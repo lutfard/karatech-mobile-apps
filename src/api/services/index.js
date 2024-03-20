@@ -12,7 +12,7 @@ const GetData = async () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'KEY': '0101',
+                // 'KEY': '0101',
             },
             });
     

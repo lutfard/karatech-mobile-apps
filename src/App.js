@@ -6,6 +6,9 @@ import { HomeScreen, InputHomeScreen, LoadingScreen, ResultScreen, OverlayExampl
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AppProvider } from './context';
+import {CreatedTable, DropTable}  from './db';
+import {openDatabase} from 'react-native-sqlite-storage';
+
 
 
 // function Home() {
@@ -24,14 +27,53 @@ import { AppProvider } from './context';
 //   );
 // }
 
-// const Stack = createNativeStackNavigator();
-// const Tab = createBottomTabNavigator();
 
+
+// createTable().then((result) => {
+//   console.log('init db success!')
+// }).catch((err) => {
+//   console.log('init failed!')
+//   console.log(err)
+// });
+
+const db = openDatabase({
+  name: 'lmapps.db',
+  location: 'default',
+});
+
+const createdTable = async () => {
+  const query = 'CREATE TABLE IF NOT EXIST test (ID INTEGER PRIMARY KEY NOT NULL, NAME TEXT NOT NULL)';
+
+  try{
+    await db.executeSql(query);
+  }
+  catch(err){
+    console.log(err);
+  }
+};
+
+const dropTable = async () => {
+  const query = 'DROP TABLE test';
+
+  try{
+    await db.executeSql(query);
+    console.log('delete');
+  }
+  catch(err){
+    console.log(err);
+  }
+};
 
 
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
+    dropTable().then((result) => {
+      console.log('init db success!')
+    }).catch((err) => {
+      console.log('init failed!')
+      console.log(err)
+    });
   }, []);
 
   return (

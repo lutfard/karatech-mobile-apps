@@ -7,6 +7,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 import org.devio.rn.splashscreen.SplashScreen;
 
+import org.pgsqlite.SQLitePluginPackage;
+
 public class MainActivity extends ReactActivity {
 
   /**
@@ -40,6 +42,13 @@ public class MainActivity extends ReactActivity {
         DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
         );
   }
+
+  // @Override
+  // protected List<ReactPackage> getPackages() {
+  //   return Arrays.<ReactPackage>asList(
+  //     new SQLitePluginPackage(),   // register SQLite Plugin here
+  //     new MainReactPackage());
+  // }
 
   
 }

@@ -5,6 +5,8 @@ import { iconTimer, iconUser } from '../../assets';
 import PropTypes from 'prop-types';
 import { useAppContext } from '../../context';
 import { textSize, textWeight, flexDirection, general, colorPallete, } from '../../style';
+import {openDatabase} from 'react-native-sqlite-storage';
+
 
 // const DATA = [
 //     {
@@ -75,6 +77,10 @@ const ResultScreen = () => {
     const { paramAction } = useAppContext();
     const { paramSide } = useAppContext();
     const { paramLimitValue } = useAppContext();
+
+    const btnSavePress = () => {
+
+    };
 
     return (
         <View style={styles.container}>

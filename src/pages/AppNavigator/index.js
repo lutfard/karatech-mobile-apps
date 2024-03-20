@@ -9,6 +9,8 @@ import InputHomeScreen from '../InputHomeScreen';
 import ResultScreen from '../ResultScreen';
 import HistoryScreen from '../HistoryScreen';
 import InfoScreen from '../InfoScreen';
+import { Image } from 'react-native-svg';
+import { iconChart, iconHistory, iconHome, iconHomeActive } from '../../assets';
 
 
 const Tab = createBottomTabNavigator();
@@ -26,7 +28,16 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="HomeScreen" component={HomeStack} options={{ headerShown: false }}/>
+        <Tab.Screen name="HomeScreen" component={HomeStack} options={{ headerShown: false,
+        tabBarShowLabel: false,
+        tabBarIcon: ({size,focused,color}) => {
+              return (
+                <Image
+                  style={{ width: size, height: size }}
+                  source={iconHomeActive}
+                />
+              );
+            },}}/>
         <Tab.Screen name="HistoryScreen" component={HistoryScreen} options={{ headerShown: false }}/>
         <Tab.Screen name="InfoScreen" component={InfoScreen} options={{ headerShown: false }}/>
       </Tab.Navigator>
