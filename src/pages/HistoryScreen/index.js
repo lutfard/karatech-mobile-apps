@@ -48,7 +48,7 @@ const CardItem = ({name, action, recordDate}) => (
 const HistoryScreen = () => {
   return (
     <View style={styles.container}>
-        <Text>History</Text>
+        {/* <Text>History</Text> */}
         <FlatList
             data={DATA}
             renderItem={({item}) => <CardItem name={item.name} action={item.action} recordDate={item.recordDate} />}

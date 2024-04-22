@@ -10,21 +10,44 @@ const db_name = 'lmapps.db';
 const db_version = '1.0';
 const db_location = 'default';
 
-export const Db = openDatabase({
+const Db = SQLite.openDatabase(
+    {
     name: 'lmapps.db',
     location: 'default',
-});
+    },
+    () => console.log('init database'),
+    error => console.error('Error init database: ', error)
+);
 
-export const CreatedTable = async () => {
-    const query = 'CREATE TABLE IF NOT EXIST test (ID INTEGER PRIMARY KEY NOT NULL, NAME TEXT NOT NULL)';
+// export const CreatedTable = async () => {
+//     const query = 'CREATE TABLE IF NOT EXIST test (ID INTEGER PRIMARY KEY NOT NULL, NAME TEXT NOT NULL)';
 
-    try {
-        await Db.executeSql(query);
-        console.log('table created.');
-    }
-    catch(err) {
-        console.log(err);
-    }
+//     try {
+//         await Db.executeSql(query);
+//         console.log('table created.');
+//     }
+//     catch(err) {
+//         console.log(err);
+//     }
+// };
+
+export const createTable = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+        tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, axisx TEXT, axisy TEXT, axisz TEXT, speed TEXT)',
+            [],
+            () => {
+            console.log('Table created successfully');
+            resolve();
+            },
+            (_, error) => {
+            console.error('Error creating table: ', error);
+            reject(error);
+            }
+        );
+        });
+    });
 };
 
 export const DropTable = async () => {
@@ -40,19 +63,3 @@ export const DropTable = async () => {
 };
 
 
-// const DB_init = () => {
-//     const db = openDB();
-//     const query = `CREATE TABLE IF NOT EXIST test (
-//                 ID INTEGER PRIMARY KEY NOT NULL,
-//                 NAME TEXT NOT NULL)`;
-//     db.transaction(tx => {
-//         tx.executeSql(query,
-//             [],
-//             () => console.log('Ttable created'),
-//             (tx, error) => console.log('failed created table', error)
-//             );
-//     });
-// };
-
-
-// export default { openDB };

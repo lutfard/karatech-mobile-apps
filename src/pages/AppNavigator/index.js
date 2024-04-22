@@ -27,7 +27,9 @@ const HomeStack = () => (
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator tabBarOptions={{
+        labelStyle: { textAlign: 'center' }
+      }}>
         <Tab.Screen name="HomeScreen" component={HomeStack} options={{ headerShown: false,
         tabBarShowLabel: false,
         tabBarIcon: ({size,focused,color}) => {
@@ -38,8 +40,8 @@ const AppNavigator = () => {
                 />
               );
             },}}/>
-        <Tab.Screen name="HistoryScreen" component={HistoryScreen} options={{ headerShown: false }}/>
-        <Tab.Screen name="InfoScreen" component={InfoScreen} options={{ headerShown: false }}/>
+        <Tab.Screen name="History" component={HistoryScreen} />
+        <Tab.Screen name="Data Info" component={InfoScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
