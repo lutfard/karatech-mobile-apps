@@ -1,12 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, FlatList} from 'react-native';
-import { Line, Button, Card } from '../../components';
-import { iconTimer, iconUser } from '../../assets';
+import {StyleSheet, Text, View, Image, FlatList} from 'react-native';
+import {Line, Button, Card} from '../../components';
+import {iconTimer, iconUser} from '../../assets';
 import PropTypes from 'prop-types';
-import { useAppContext } from '../../context';
-import { textSize, textWeight, flexDirection, general, colorPallete, } from '../../style';
+import {useAppContext} from '../../context';
+import {
+  textSize,
+  textWeight,
+  flexDirection,
+  general,
+  colorPallete,
+} from '../../style';
 import {openDatabase} from 'react-native-sqlite-storage';
-
+import result from '../../dummy/dummy';
+import {insertUser} from '../../db';
 
 // const DATA = [
 //     {
@@ -38,151 +45,172 @@ import {openDatabase} from 'react-native-sqlite-storage';
 //         axisY: 5434,
 //         axisZ: 5224,
 //         speed: 205
-//     }      
+//     }
 // ];
 
-
-
 const DataValue = ({label, value}) => (
-    <View style={flexDirection.row}>
-        <View style={styles.boxLabel}>
-            <Text style={[{color: colorPallete.white}, textWeight[500], textSize[14]]}>{label}</Text>
-        </View>
-        <Text style={[{marginRight:15, width: 40}, textSize[14], textWeight[500]]}>{value}</Text>
+  <View style={flexDirection.row}>
+    <View style={styles.boxLabel}>
+      <Text
+        style={[{color: colorPallete.white}, textWeight[500], textSize[14]]}>
+        {label}
+      </Text>
     </View>
+    <Text style={[{marginRight: 15, width: 40}, textSize[14], textWeight[500]]}>
+      {value}
+    </Text>
+  </View>
 );
 
 const Item = ({x, y, z, speed}) => (
-    <View style={styles.item}>
-        <View style={flexDirection.row}>
-            <DataValue label='X' value={x}/>
-            <DataValue label='Y' value={y}/>
-            <DataValue label='Z' value={z}/>
-            <Text style={[{color:colorPallete.black}, textSize[18], textWeight[800]]}>{speed} m/s</Text>
-        </View>
+  <View style={styles.item}>
+    <View style={flexDirection.row}>
+      <DataValue label="X" value={x} />
+      <DataValue label="Y" value={y} />
+      <DataValue label="Z" value={z} />
+      <Text
+        style={[{color: colorPallete.black}, textSize[18], textWeight[800]]}>
+        {speed} m/s
+      </Text>
     </View>
+  </View>
 );
 
 Item.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-    z: PropTypes.number.isRequired,
-    speed: PropTypes.number,
-  };
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  z: PropTypes.number.isRequired,
+  speed: PropTypes.number,
+};
 
 const ResultScreen = () => {
-    const { dataResult } = useAppContext();
-    const { paramName } = useAppContext();
-    const { paramGender } = useAppContext();
-    const { paramAction } = useAppContext();
-    const { paramSide } = useAppContext();
-    const { paramLimitValue } = useAppContext();
+  const {dataResult} = useAppContext();
+  const {paramName} = useAppContext();
+  const {paramGender} = useAppContext();
+  const {paramAction} = useAppContext();
+  const {paramSide} = useAppContext();
+  const {paramLimitValue} = useAppContext();
 
-    const btnSavePress = () => {
+  const btnSavePress = async () => {
+    try {
+      await insertUser(paramName);
+    } catch (error) {
+      console.log('error');
+    }
+  };
 
-    };
-
-    return (
-        <View style={styles.container}>
-            <Text style={styles.txtTitle}>Result</Text>
-            <Line/>
-            <View style={[styles.card, general.card]}>
-                <View style={flexDirection.row}>
-                    <Image source={iconUser} resizeMode='contain'/>
-                    <Text style={[ styles.textName, textSize[18], textWeight[500] ]}>  {paramName}</Text>
-                    <Text style={textSize[18]}> / </Text>
-                    <Text style={textSize[18]}>{paramGender}</Text>
-                </View>
-                <View style={flexDirection.row}>
-                    <Image source={iconTimer} resizeMode='contain'/>
-                    <Text style={textSize[18]}>  {paramLimitValue}</Text>
-                </View>
-                <View style={styles.textBox}>
-                    <Text style={{color:colorPallete.white}}>{paramSide} {paramAction}</Text>
-                </View>
-            </View>
-            <FlatList
-                    data={dataResult.DATA}
-                    renderItem={({item}) => <Item x={item.AXIS_X} y={item.AXIS_Y} z={item.AXIS_Z} speed={item.SPEED} />}
-                    // keyExtractor={item => item.speed}
-                />
-                {/* <Text>{JSON.stringify(dataResult)}</Text> */}
-            {/* <Text>{paramName}</Text> */}
-            <View style={flexDirection.row}>
-                <Button text='save' onPress={null} style={styles.btnSave}/>
-                <Button text='delete' onPress={null} style={styles.btnDelete}/>
-            </View>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.txtTitle}>Result</Text>
+      <Line />
+      <View style={[styles.card, general.card]}>
+        <View style={flexDirection.row}>
+          <Image source={iconUser} resizeMode="contain" />
+          <Text style={[styles.textName, textSize[18], textWeight[500]]}>
+            {' '}
+            {paramName}
+          </Text>
+          <Text style={textSize[18]}> / </Text>
+          <Text style={textSize[18]}>{paramGender}</Text>
         </View>
-    );
+        <View style={flexDirection.row}>
+          <Image source={iconTimer} resizeMode="contain" />
+          <Text style={textSize[18]}> {paramLimitValue}</Text>
+        </View>
+        <View style={styles.textBox}>
+          <Text style={{color: colorPallete.white}}>
+            {paramSide} {paramAction}
+          </Text>
+        </View>
+      </View>
+      <FlatList
+        data={result.DATA}
+        renderItem={({item}) => (
+          <Item
+            x={item.AXIS_X}
+            y={item.AXIS_Y}
+            z={item.AXIS_Z}
+            speed={item.SPEED}
+          />
+        )}
+        // keyExtractor={item => item.speed}
+      />
+      {/* <Text>{JSON.stringify(dataResult)}</Text> */}
+      {/* <Text>{paramName}</Text> */}
+      <View style={flexDirection.row}>
+        <Button text="save" onPress={btnSavePress} style={styles.btnSave} />
+        <Button text="delete" onPress={null} style={styles.btnDelete} />
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        // flexDirection: 'column',
-        backgroundColor: 'white', 
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    card: {
-        marginBottom: 20,
-        padding: 20
-    },
-    txtTitle: {
-        fontSize: 28,
-        fontWeight: 300,
-        color: 'black',
-        marginTop: 50,
-        marginBottom: 30
-    },
-    textName: {
-        color: 'black',
-    },
-    btnSave: {
-        // marginTop: 10,
-        borderRadius: 50,
-        backgroundColor: 'green',
-        borderColor: 'green',
-        color: 'white',
-        width: 160,
-    },
-    btnDelete: {
-        // marginTop: 10,
-        borderRadius: 50,
-        backgroundColor: 'red',
-        borderColor: 'red',
-        color: 'white',
-        width: 160,
-    },
-    textBox: {
-        width: 290,
-        height: 28,
-        borderRadius: 5,
-        backgroundColor: "#7F9CAF",
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    item: {
-        // backgroundColor: '#f9c2ff',
-        padding: 5,
-        marginVertical: 5,
-        // marginHorizontal: 16,
-    },
-    title: {
-        fontSize: 18,
-    },
-    boxLabel: {
-        width: 26,
-        height: 22,
-        padding: 0,
-        borderRadius: 5,
-        marginRight: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: colorPallete.primary,
-        opacity: 50
-    }
-})
+  container: {
+    // flexDirection: 'column',
+    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    marginBottom: 20,
+    padding: 20,
+  },
+  txtTitle: {
+    fontSize: 28,
+    fontWeight: 300,
+    color: 'black',
+    marginTop: 50,
+    marginBottom: 30,
+  },
+  textName: {
+    color: 'black',
+  },
+  btnSave: {
+    // marginTop: 10,
+    borderRadius: 50,
+    backgroundColor: 'green',
+    borderColor: 'green',
+    color: 'white',
+    width: 160,
+  },
+  btnDelete: {
+    // marginTop: 10,
+    borderRadius: 50,
+    backgroundColor: 'red',
+    borderColor: 'red',
+    color: 'white',
+    width: 160,
+  },
+  textBox: {
+    width: 290,
+    height: 28,
+    borderRadius: 5,
+    backgroundColor: '#7F9CAF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  item: {
+    // backgroundColor: '#f9c2ff',
+    padding: 5,
+    marginVertical: 5,
+    // marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 18,
+  },
+  boxLabel: {
+    width: 26,
+    height: 22,
+    padding: 0,
+    borderRadius: 5,
+    marginRight: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colorPallete.primary,
+    opacity: 50,
+  },
+});
 
 export default ResultScreen;
-
