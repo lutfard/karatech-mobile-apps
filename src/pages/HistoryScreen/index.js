@@ -1,6 +1,12 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, Text, View, Image, FlatList} from 'react-native';
-import {Line, Button, Card} from '../../components';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {iconTimer, iconUser, iconUserWhite} from '../../assets';
 import PropTypes from 'prop-types';
 import {
@@ -10,7 +16,11 @@ import {
   general,
   colorPallete,
 } from '../../style';
-import {readData} from '../../db';
+import {getData} from '../../db';
+import {useIsFocused} from '@react-navigation/native';
+import scaleFont from '../../style/FontScaler';
+import Dimension from '../../style/Dimension';
+import Colors from '../../style/Color';
 
 const DATA = [
   {
@@ -33,8 +43,10 @@ const DATA = [
   },
 ];
 
-const CardItem = ({name, action, recordDate}) => (
-  <View style={[{marginBottom: 10}, general.card]}>
+const CardItem = ({name, action, recordDate, onPress}) => (
+  <TouchableOpacity
+    style={[{marginBottom: 10}, general.card]}
+    onPress={onPress}>
     <View style={[styles.row, flexDirection.row]}>
       <View style={styles.boxIcon}>
         <Image source={iconUserWhite} />
@@ -56,26 +68,24 @@ const CardItem = ({name, action, recordDate}) => (
         </View>
       </View>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
-const HistoryScreen = () => {
-  const loadData = async () => {
-    try {
-      const data = await readData();
-      console.log('data: ', data);
-    } catch (error) {
-      console.log('error: ', error);
-    }
-  };
+const HistoryScreen = ({navigation}) => {
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isFocused) {
+      // getData();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
-      {/* <Text>History</Text> */}
+      <View style={styles.titleContainer}>
+        <Text style={styles.txtTitle}>History</Text>
+        <View style={styles.underLine} />
+      </View>
       <FlatList
         data={DATA}
         renderItem={({item}) => (
@@ -83,8 +93,10 @@ const HistoryScreen = () => {
             name={item.name}
             action={item.action}
             recordDate={item.recordDate}
+            onPress={() => navigation.navigate('HistoryDetail')}
           />
         )}
+        contentContainerStyle={styles.flatlistContainer}
       />
     </View>
   );
@@ -94,9 +106,30 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
+
+  txtTitle: {
+    fontSize: scaleFont(24),
+    color: Colors.black,
+    fontFamily: 'Poppins-Light',
+    alignSelf: 'center',
+  },
+
+  underLine: {
+    height: 2,
+    width: Math.round(Dimension.width * 0.08),
+    backgroundColor: Colors.darkBlue,
+    alignSelf: 'center',
+  },
+
+  titleContainer: {
+    marginTop: 50,
+    marginBottom: 30,
+  },
+
+  flatlistContainer: {flex: 1, paddingHorizontal: 24},
+
   boxIcon: {
     width: 37,
     height: 56,
@@ -109,6 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   textarea: {
     marginLeft: 10,
     justifyContent: 'center',

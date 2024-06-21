@@ -5,4 +5,4 @@ const url_nullAdj = '';
 const url_getData = 'http://192.168.1.8:8181/karatech/Services/GetData';
 const url_recordSample = '';
 
-export { url_triggerStart, url_nullAdj, url_getData, url_recordSample }
+export {url_triggerStart, url_nullAdj, url_getData, url_recordSample};

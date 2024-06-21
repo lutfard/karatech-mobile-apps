@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
+import scaleFont from '../../../style/FontScaler';
 
 const Button = ({text, onPress, style}) => {
   return (
@@ -17,22 +18,22 @@ Button.propTypes = {
 };
 
 const styles = StyleSheet.create({
-    Button: {
-        // backgroundColor: 'red',
-        // borderColor: '#D7B356',
-        width: 190,
-        height: 50,
-        borderRadius: 50,
-        borderWidth: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 5
-    },
-    txtButton: {
-        fontSize: 18,
-        fontWeight: 500,
-        color: '#D7B356'
-    }
-})
+  Button: {
+    // backgroundColor: 'red',
+    // borderColor: '#D7B356',
+    width: '50%',
+    height: 50,
+    borderRadius: 50,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+  },
+  txtButton: {
+    fontSize: scaleFont(18),
+    fontFamily: 'Poppins-SemiBold',
+    paddingTop: 4,
+  },
+});
 
 export default Button;

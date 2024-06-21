@@ -8,4 +8,14 @@ import AppNavigator from './AppNavigator';
 import HistoryScreen from './HistoryScreen';
 import InfoScreen from './InfoScreen';
 
-export { SplashScreen, HomeScreen, InputHomeScreen, LoadingScreen, ResultScreen, OverlayExample, AppNavigator, HistoryScreen, InfoScreen }
+export {
+  SplashScreen,
+  HomeScreen,
+  InputHomeScreen,
+  LoadingScreen,
+  ResultScreen,
+  OverlayExample,
+  AppNavigator,
+  HistoryScreen,
+  InfoScreen,
+};
