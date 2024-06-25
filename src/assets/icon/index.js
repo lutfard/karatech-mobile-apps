@@ -6,6 +6,7 @@ import iconHome from './iconHome.png';
 import iconHistory from './iconHistory.png';
 import iconHomeActive from './iconHome_active.png';
 import iconPhoneCon from './iconPhoneCon.png';
+import iconNotConnected from './iconNotConnected.png';
 
 export {
   iconTimer,
@@ -16,4 +17,5 @@ export {
   iconHistory,
   iconHomeActive,
   iconPhoneCon,
+  iconNotConnected,
 };

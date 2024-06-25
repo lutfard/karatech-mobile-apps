@@ -9,7 +9,13 @@ import {
   TextInput,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {Ilogopunch, Ilogokick, SqrBackground, iconPhoneCon} from '../../assets';
+import {
+  Ilogopunch,
+  Ilogokick,
+  SqrBackground,
+  iconPhoneCon,
+  iconNotConnected,
+} from '../../assets';
 import {general} from '../../style';
 import {AppProvider, useAppContext} from '../../context';
 import Dimension from '../../style/Dimension';
@@ -45,7 +51,14 @@ const HomeScreen = ({navigation}) => {
         <Image source={SqrBackground} style={style.imgBackground} />
         <View style={style.toolbar}>
           <TouchableOpacity onPress={() => setIPModal(true)}>
-            <Image source={iconPhoneCon} style={style.toolbarIcon} />
+            <Image
+              source={
+                savedIPAddress === null || savedIPAddress === ''
+                  ? iconNotConnected
+                  : iconPhoneCon
+              }
+              style={style.toolbarIcon}
+            />
           </TouchableOpacity>
         </View>
         <View style={style.contentContainer}>
