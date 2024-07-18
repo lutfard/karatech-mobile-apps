@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,10 +9,8 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {Button} from '../../components';
 import {SqrBackgroundTwo, iconTimer, iconUser} from '../../assets';
 import PropTypes from 'prop-types';
-import {useAppContext} from '../../context';
 import {
   textSize,
   textWeight,
@@ -19,8 +18,7 @@ import {
   general,
   colorPallete,
 } from '../../style';
-import result from '../../dummy/dummy';
-import {getLatestUserData, insertData} from '../../db';
+import {deleteHistoryData, deleteUser, getDataDetailHistory} from '../../db';
 import {useIsFocused} from '@react-navigation/native';
 import scaleFont from '../../style/FontScaler';
 import Dimension from '../../style/Dimension';
@@ -34,7 +32,7 @@ const DataValue = ({label, value}) => (
         {label}
       </Text>
     </View>
-    <Text style={[{marginRight: 15, width: 40}, textSize[14], textWeight[500]]}>
+    <Text style={[styles.dataValueText, textSize[14], textWeight[500]]}>
       {value}
     </Text>
   </View>
@@ -42,17 +40,8 @@ const DataValue = ({label, value}) => (
 
 const Item = ({x, y, z, speed, index}) => (
   <View style={styles.item}>
-    <View
-      style={[
-        flexDirection.row,
-        {alignItems: 'center', justifyContent: 'space-between'},
-      ]}>
-      <Text
-        style={[
-          {color: colorPallete.black, marginRight: 12},
-          textSize[18],
-          textWeight[800],
-        ]}>
+    <View style={[flexDirection.row, styles.itemInnerContainer]}>
+      <Text style={[styles.itemText, textSize[18], textWeight[800]]}>
         {index + 1}
       </Text>
       <DataValue label="X" value={x} />
@@ -73,16 +62,9 @@ Item.propTypes = {
   speed: PropTypes.number,
 };
 
-const HistoryDetailScreen = ({navigation}) => {
-  const {dataResult} = useAppContext();
-  const {
-    paramName,
-    paramGender,
-    paramAction,
-    paramSide,
-    paramLimitValue,
-    paramLimit,
-  } = useAppContext();
+const HistoryDetailScreen = ({navigation, route}) => {
+  const {data} = route.params;
+  const [resultData, setResultData] = useState([]);
   const isFocused = useIsFocused();
 
   const deleteButtonHandler = () => {
@@ -93,18 +75,43 @@ const HistoryDetailScreen = ({navigation}) => {
   };
 
   const btnDeletePress = () => {
-    // insertData(paramName);
-    Alert.alert('Sukses', 'Data berhasil di hapus!', [
-      {
-        text: 'Kembali',
-        onPress: () => navigation.goBack(),
-      },
-    ]);
+    deleteUser(data.id)
+      .then(() => {
+        deleteHistoryData(data.id)
+          .then(() => {
+            Alert.alert('Sukses', 'Data berhasil di hapus!', [
+              {
+                text: 'Kembali',
+                onPress: () => navigation.navigate('HomeScreen'),
+              },
+            ]);
+          })
+          .catch(error => {
+            console.log('error: ', error);
+            Alert.alert('Gagal', 'Data gagal di hapus! Harap Coba lagi', [
+              {text: 'OK'},
+            ]);
+          });
+      })
+      .catch(error => {
+        console.log('error: ', error);
+        Alert.alert('Gagal', 'Data gagal di hapus! Harap Coba lagi', [
+          {text: 'OK'},
+        ]);
+      });
   };
 
   useEffect(() => {
     if (isFocused) {
-      getLatestUserData();
+      getDataDetailHistory(data.id)
+        .then(dataHist => {
+          console.log('res data: ', dataHist);
+
+          setResultData(dataHist);
+        })
+        .catch(error => {
+          console.log('error retrieve history data');
+        });
     }
   }, [isFocused]);
 
@@ -121,32 +128,25 @@ const HistoryDetailScreen = ({navigation}) => {
             <Image source={iconUser} resizeMode="contain" />
             <Text style={[styles.textName, textSize[18], textWeight[500]]}>
               {' '}
-              {paramName}
+              {data.name}
             </Text>
             <Text style={textSize[18]}> / </Text>
-            <Text style={textSize[18]}>{paramGender}</Text>
+            <Text style={textSize[18]}>{data.gender}</Text>
           </View>
           <View style={styles.resultContainer}>
             <Image source={iconTimer} resizeMode="contain" />
             <Text style={textSize[18]}>
               {' '}
-              {paramLimitValue} {paramLimit === 'Timer' ? 'Second' : 'Reps'}
+              {data.limit} {data.type}
             </Text>
           </View>
           <View style={styles.textBox}>
-            <Text
-              style={{
-                color: colorPallete.white,
-                fontFamily: 'Poppins-Medium',
-                fontSize: scaleFont(13),
-              }}>
-              {paramSide} {paramAction}
-            </Text>
+            <Text style={styles.textBoxContent}>{data.action}</Text>
           </View>
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={result.DATA}
+          data={resultData.DATA}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}
@@ -157,10 +157,7 @@ const HistoryDetailScreen = ({navigation}) => {
             />
           )}
           keyExtractor={item => item.SPEED}
-          contentContainerStyle={{
-            borderTopWidth: 1,
-            borderTopColor: '#B6B6B6',
-          }}
+          contentContainerStyle={styles.flatListContainer}
         />
         <View style={styles.bottomContentContainer}>
           <TouchableOpacity
@@ -235,6 +232,8 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 
+  flatListContainer: {borderTopWidth: 1, borderTopColor: '#B6B6B6'},
+
   bottomContentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -266,6 +265,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 6,
     paddingBottom: 4,
+  },
+
+  textBoxContent: {
+    color: colorPallete.white,
+    fontFamily: 'Poppins-Medium',
+    fontSize: scaleFont(13),
   },
 
   item: {
@@ -319,6 +324,12 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 10,
   },
+
+  dataValueText: {marginRight: 15, width: 40},
+
+  itemInnerContainer: {alignItems: 'center', justifyContent: 'space-between'},
+
+  itemText: {color: colorPallete.black, marginRight: 12},
 });
 
 export default HistoryDetailScreen;

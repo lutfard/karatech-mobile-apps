@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,8 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {iconTimer, iconUser, iconUserWhite} from '../../assets';
-import PropTypes from 'prop-types';
+import {iconUserWhite} from '../../assets';
 import {
   textSize,
   textWeight,
@@ -16,36 +15,16 @@ import {
   general,
   colorPallete,
 } from '../../style';
-import {getData} from '../../db';
+import {getDataHistory} from '../../db';
 import {useIsFocused} from '@react-navigation/native';
 import scaleFont from '../../style/FontScaler';
 import Dimension from '../../style/Dimension';
 import Colors from '../../style/Color';
-
-const DATA = [
-  {
-    id: 101,
-    name: 'Lutfi Ardiansyah',
-    action: 'Left Punch',
-    recordDate: '04/02/2024 14:28',
-  },
-  {
-    id: 102,
-    name: 'Lutfi Ardiansyah',
-    action: 'Right Punch',
-    recordDate: '04/02/2024 15:28',
-  },
-  {
-    id: 103,
-    name: 'Lutfi Ardiansyah',
-    action: 'Right Punch',
-    recordDate: '04/02/2024 16:58',
-  },
-];
+import {LoadingComponent} from '../../components';
 
 const CardItem = ({name, action, recordDate, onPress}) => (
   <TouchableOpacity
-    style={[{marginBottom: 10}, general.card]}
+    style={[styles.cardItemContainer, general.card]}
     onPress={onPress}>
     <View style={[styles.row, flexDirection.row]}>
       <View style={styles.boxIcon}>
@@ -63,7 +42,7 @@ const CardItem = ({name, action, recordDate, onPress}) => (
           </Text>
           <View style={[flexDirection.row]}>
             <Text>{action}</Text>
-            <Text style={{marginLeft: 90}}>{recordDate}</Text>
+            <Text style={styles.cardItemDate}>{recordDate}</Text>
           </View>
         </View>
       </View>
@@ -72,13 +51,26 @@ const CardItem = ({name, action, recordDate, onPress}) => (
 );
 
 const HistoryScreen = ({navigation}) => {
+  const [histData, setHistData] = useState(null);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
-      // getData();
+      getDataHistory()
+        .then(dataHist => {
+          console.log('history user list: ', dataHist);
+
+          setHistData(dataHist);
+        })
+        .catch(error => {
+          console.error('error retrieve history: ', error);
+        });
     }
   }, [isFocused]);
+
+  if (!histData) {
+    return <LoadingComponent />;
+  }
 
   return (
     <View style={styles.container}>
@@ -87,13 +79,13 @@ const HistoryScreen = ({navigation}) => {
         <View style={styles.underLine} />
       </View>
       <FlatList
-        data={DATA}
+        data={histData}
         renderItem={({item}) => (
           <CardItem
             name={item.name}
             action={item.action}
-            recordDate={item.recordDate}
-            onPress={() => navigation.navigate('HistoryDetail')}
+            recordDate={item.created_data}
+            onPress={() => navigation.navigate('HistoryDetail', {data: item})}
           />
         )}
         contentContainerStyle={styles.flatlistContainer}
@@ -147,6 +139,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     justifyContent: 'center',
   },
+
+  cardItemContainer: {marginBottom: 10},
+
+  cardItemDate: {marginLeft: 90},
 });
 
 export default HistoryScreen;

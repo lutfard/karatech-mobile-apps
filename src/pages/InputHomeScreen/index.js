@@ -1,6 +1,11 @@
-import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {OptionTab, Input, DropdownComponent} from '../../components';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import {
+  OptionTab,
+  Input,
+  DropdownComponent,
+  LoadingComponent,
+} from '../../components';
 import {useAppContext} from '../../context';
 import {colorPallete} from '../../style';
 import {clearSpace} from '../../style';
@@ -8,6 +13,8 @@ import {insertData} from '../../db';
 import scaleFont from '../../style/FontScaler';
 import Colors from '../../style/Color';
 import {Icon} from '../../assets/icon/Icon';
+import axios from 'axios';
+import {url_postData} from '../../api/endpoint';
 
 const InputHomeScreen = ({navigation}) => {
   const {paramName, updateParamName} = useAppContext();
@@ -15,6 +22,7 @@ const InputHomeScreen = ({navigation}) => {
   const {paramSide, updateParamSide} = useAppContext();
   const {paramLimit, updateParamLimit} = useAppContext();
   const {paramLimitValue, updateParamLimitValue} = useAppContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   const selectGender = [
     {label: 'Male', value: 'Male'},
@@ -28,9 +36,9 @@ const InputHomeScreen = ({navigation}) => {
   ];
 
   const optionReps = [
-    {label: '5 reps', value: 10},
-    {label: '10 reps', value: 15},
-    {label: '15 reps', value: 25},
+    {label: '5 reps', value: 5},
+    {label: '10 reps', value: 10},
+    {label: '15 reps', value: 15},
   ];
 
   const selectedSide = value => {
@@ -41,16 +49,42 @@ const InputHomeScreen = ({navigation}) => {
     updateParamLimit(value);
   };
 
+  const btnStartPressHandle = async () => {
+    const payload = {
+      command: true,
+      time: paramLimitValue,
+    };
+
+    setIsLoading(true);
+
+    try {
+      const post = await axios.post(url_postData, payload, {
+        headers: {'Content-Type': 'application/json'},
+      });
+
+      console.log('response: ', post);
+      btnStartPress();
+    } catch (error) {
+      setIsLoading(false);
+      console.log('error: ', error);
+      Alert.alert('Error', 'Harap Periksa Koneksi Anda');
+    }
+  };
+
   const btnStartPress = () => {
     const payload = {
       name: paramName,
       action: `Punch ${paramSide}`,
       type: paramLimit,
       gender: paramGender,
+      limit: paramLimitValue,
     };
 
-    // insertData(payload);
+    insertData(payload)
+      .then(() => console.log('Data inserted successfully'))
+      .catch(error => console.error('Error inserting data:', error));
     updateParamName(paramName);
+    setIsLoading(false);
     navigation.navigate('LoadingScreen');
   };
 
@@ -119,7 +153,7 @@ const InputHomeScreen = ({navigation}) => {
               ? style.bottomButtonDisabled
               : style.bottomButton
           }
-          onPress={btnStartPress}
+          onPress={btnStartPressHandle}
           disabled={
             paramName === null ||
             paramGender === null ||
@@ -139,6 +173,7 @@ const InputHomeScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      {isLoading && <LoadingComponent />}
     </View>
   );
 };

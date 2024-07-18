@@ -1,63 +1,33 @@
-import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {
-  url_getData,
-  url_nullAdj,
-  url_triggerStart,
-  url_recordSample,
-} from '../endpoint';
+import {url_getData, url_postData} from '../endpoint';
 
-const GetData = async () => {
-  // const { paramAction, updateParamAction } = useAppContext();
+const postData = async time => {
+  const payload = {
+    command: true,
+    time: time,
+  };
 
   try {
-    const response = await fetch(url_getData, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'KEY': '0101',
-      },
+    const post = await axios.post(url_postData, payload, {
+      headers: {'Content-Type': 'application/json'},
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    // setDataResult(result);
-    console.log(result);
-    return result;
+    console.log('response: ', post);
   } catch (error) {
-    console.error(error.message);
-    throw new Error('Something wrong!');
+    console.log('error: ', error);
   }
 };
 
-const NullAdj = async () => {
+const getData = async () => {
   try {
-    const response = await axios.get(url_nullAdj);
-    return response.data;
+    const response = await axios.get(url_getData, {
+      headers: {'Content-Type': 'application/json'},
+    });
+
+    console.log('response: ', response);
   } catch (error) {
-    return error.message;
+    console.log('error: ', error);
   }
 };
 
-const TriggerStart = async () => {
-  try {
-    const response = await axios.get(url_triggerStart);
-    return response.data;
-  } catch (error) {
-    return error.message;
-  }
-};
-
-const RecordSample = async () => {
-  try {
-    const response = await axios.get(url_recordSample);
-    return response.data;
-  } catch (error) {
-    return error.message;
-  }
-};
-
-export {GetData, NullAdj, TriggerStart, RecordSample};
+export {postData, getData};

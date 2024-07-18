@@ -6,16 +6,8 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  TextInput,
 } from 'react-native';
-import Modal from 'react-native-modal';
-import {
-  Ilogopunch,
-  Ilogokick,
-  SqrBackground,
-  iconPhoneCon,
-  iconNotConnected,
-} from '../../assets';
+import {Ilogopunch, Ilogokick, SqrBackground} from '../../assets';
 import {general} from '../../style';
 import {AppProvider, useAppContext} from '../../context';
 import Dimension from '../../style/Dimension';
@@ -23,9 +15,8 @@ import scaleFont from '../../style/FontScaler';
 import Colors from '../../style/Color';
 
 const HomeScreen = ({navigation}) => {
-  const {updateParamAction, savedIPAddress, updateIPAddress} = useAppContext();
+  const {updateParamAction} = useAppContext();
   const [typeAction, setTypeAction] = useState(null);
-  const [IPModal, setIPModal] = useState(false);
 
   const ToInputHome = async action => {
     try {
@@ -49,18 +40,6 @@ const HomeScreen = ({navigation}) => {
     <AppProvider>
       <SafeAreaView style={style.container}>
         <Image source={SqrBackground} style={style.imgBackground} />
-        <View style={style.toolbar}>
-          <TouchableOpacity onPress={() => setIPModal(true)}>
-            <Image
-              source={
-                savedIPAddress === null || savedIPAddress === ''
-                  ? iconNotConnected
-                  : iconPhoneCon
-              }
-              style={style.toolbarIcon}
-            />
-          </TouchableOpacity>
-        </View>
         <View style={style.contentContainer}>
           <View>
             <View style={style.greetingContainer}>
@@ -102,48 +81,14 @@ const HomeScreen = ({navigation}) => {
           </View>
           <TouchableOpacity
             style={
-              typeAction !== null &&
-              savedIPAddress !== null &&
-              savedIPAddress !== ''
-                ? style.buttonLight
-                : style.buttonDisabled
+              typeAction !== null ? style.buttonLight : style.buttonDisabled
             }
             onPress={() => ToInputHome(typeAction)}
-            disabled={typeAction ? false : true}>
+            disabled={typeAction !== null ? false : true}>
             <Text style={style.buttonText}>Next</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      <Modal
-        isVisible={IPModal}
-        onBackdropPress={() => setIPModal(false)}
-        useNativeDriver>
-        <View style={style.modalContainer}>
-          <Text style={style.modalTitle}>IP Address</Text>
-          <TextInput
-            style={style.modalTextInput}
-            placeholder="Ex: 192.168.x.x"
-            placeholderTextColor="#D1D1D1"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="off"
-            value={savedIPAddress}
-            onChangeText={newVal => updateIPAddress(newVal)}
-          />
-          <View style={style.modalBottomContainer}>
-            <TouchableOpacity
-              style={style.modalButtonApproved}
-              onPress={() => setIPModal(false)}>
-              <Text style={style.modalButtonApprovedText}>OK</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={style.modalButtonCancel}
-              onPress={() => setIPModal(false)}>
-              <Text style={style.modalButtonCancelText}>CANCEL</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </AppProvider>
   );
 };
@@ -157,23 +102,11 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
 
-  toolbar: {
-    width: '100%',
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    paddingTop: 36,
-    alignItems: 'flex-end',
-  },
-
-  toolbarIcon: {
-    height: Math.round(Dimension.dimTotal * 0.022),
-    width: Math.round(Dimension.dimTotal * 0.022),
-  },
-
   contentContainer: {
     flex: 1,
     justifyContent: 'space-between',
     paddingBottom: 80,
+    paddingTop: '20%',
     width: '100%',
   },
 

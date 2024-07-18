@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,12 +18,14 @@ import {
   general,
   colorPallete,
 } from '../../style';
-import result from '../../dummy/dummy';
-import {getLatestUserData, insertData} from '../../db';
 import {useIsFocused} from '@react-navigation/native';
 import scaleFont from '../../style/FontScaler';
 import Dimension from '../../style/Dimension';
 import Colors from '../../style/Color';
+import axios from 'axios';
+import {url_getData} from '../../api/endpoint';
+import {LoadingComponent} from '../../components';
+import {deleteUser, getLatestUserData, insertDataDetail} from '../../db';
 
 const DataValue = ({label, value}) => (
   <View style={flexDirection.row}>
@@ -33,7 +35,7 @@ const DataValue = ({label, value}) => (
         {label}
       </Text>
     </View>
-    <Text style={[{marginRight: 15, width: 40}, textSize[14], textWeight[500]]}>
+    <Text style={[styles.dataValueText, textSize[14], textWeight[500]]}>
       {value}
     </Text>
   </View>
@@ -41,17 +43,8 @@ const DataValue = ({label, value}) => (
 
 const Item = ({x, y, z, speed, index}) => (
   <View style={styles.item}>
-    <View
-      style={[
-        flexDirection.row,
-        {alignItems: 'center', justifyContent: 'space-between'},
-      ]}>
-      <Text
-        style={[
-          {color: colorPallete.black, marginRight: 12},
-          textSize[18],
-          textWeight[800],
-        ]}>
+    <View style={[flexDirection.row, styles.itemInnerContainer]}>
+      <Text style={[styles.itemText, textSize[18], textWeight[800]]}>
         {index + 1}
       </Text>
       <DataValue label="X" value={x} />
@@ -73,7 +66,8 @@ Item.propTypes = {
 };
 
 const ResultScreen = ({navigation}) => {
-  const {dataResult} = useAppContext();
+  const [resultData, setResultData] = useState(null);
+  const [latesUserData, setLatestUserData] = useState(null);
   const {
     paramName,
     paramGender,
@@ -92,10 +86,32 @@ const ResultScreen = ({navigation}) => {
   };
 
   const btnSavePress = () => {
-    // insertData(paramName);
-    Alert.alert('Sukses', 'Data berhasil di simpan!', [
-      {text: 'Menuju History', onPress: () => navigation.navigate('History')},
-    ]);
+    const payload = resultData.DATA.map(x => {
+      return {
+        id: latesUserData.id,
+        AXIS_X: x.AXIS_X,
+        AXIS_Y: x.AXIS_Y,
+        AXIS_Z: x.AXIS_Z,
+        SPEED: x.SPEED,
+        TIMESTAMP: x.TIMESTAMP,
+      };
+    });
+
+    insertDataDetail(payload)
+      .then(() => {
+        Alert.alert('Sukses', 'Data berhasil di simpan!', [
+          {
+            text: 'Menuju History',
+            onPress: () => navigation.navigate('History'),
+          },
+        ]);
+      })
+      .catch(error => {
+        console.log('error insert: ', error);
+        Alert.alert('Gagal', 'Data gagal di simpan! Harap Coba lagi', [
+          {text: 'OK'},
+        ]);
+      });
   };
 
   const deleteButtonHandler = () => {
@@ -106,20 +122,57 @@ const ResultScreen = ({navigation}) => {
   };
 
   const btnDeletePress = () => {
-    // insertData(paramName);
-    Alert.alert('Sukses', 'Data berhasil di hapus!', [
-      {
-        text: 'Kembali',
-        onPress: () => navigation.navigate('HomeScreen'),
-      },
-    ]);
+    deleteUser(latesUserData.id)
+      .then(() => {
+        Alert.alert('Sukses', 'Data berhasil di hapus!', [
+          {
+            text: 'Kembali',
+            onPress: () => navigation.navigate('HomeScreen'),
+          },
+        ]);
+      })
+      .catch(error => {
+        console.log('error: ', error);
+        Alert.alert('Gagal', 'Data gagal di hapus! Harap Coba lagi', [
+          {text: 'OK'},
+        ]);
+      });
+  };
+
+  const getUserData = async () => {
+    getLatestUserData()
+      .then(data => {
+        console.log('user data: ', data);
+
+        setLatestUserData(data[0]);
+      })
+      .catch(error => console.error('error retrieve data: ', error));
+  };
+
+  const getData = async () => {
+    try {
+      const response = await axios.get(url_getData, {
+        headers: {'Content-Type': 'application/json'},
+      });
+
+      console.log('response: ', response.data);
+
+      setResultData(response.data);
+    } catch (error) {
+      console.log('error: ', error);
+    }
   };
 
   useEffect(() => {
     if (isFocused) {
-      getLatestUserData();
+      getData();
+      getUserData();
     }
   }, [isFocused]);
+
+  if (!resultData) {
+    return <LoadingComponent />;
+  }
 
   return (
     <View style={styles.container}>
@@ -147,19 +200,14 @@ const ResultScreen = ({navigation}) => {
             </Text>
           </View>
           <View style={styles.textBox}>
-            <Text
-              style={{
-                color: colorPallete.white,
-                fontFamily: 'Poppins-Medium',
-                fontSize: scaleFont(13),
-              }}>
+            <Text style={styles.textBoxContent}>
               {paramSide} {paramAction}
             </Text>
           </View>
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={result.DATA}
+          data={resultData?.DATA || []}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}
@@ -170,7 +218,7 @@ const ResultScreen = ({navigation}) => {
             />
           )}
           keyExtractor={item => item.SPEED}
-          contentContainerStyle={{borderTopWidth: 1, borderTopColor: '#B6B6B6'}}
+          contentContainerStyle={styles.flatListContainer}
         />
         <View style={styles.bottomContentContainer}>
           <TouchableOpacity
@@ -244,6 +292,8 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 
+  flatListContainer: {borderTopWidth: 1, borderTopColor: '#B6B6B6'},
+
   bottomContentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -275,6 +325,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 6,
     paddingBottom: 4,
+  },
+
+  textBoxContent: {
+    color: colorPallete.white,
+    fontFamily: 'Poppins-Medium',
+    fontSize: scaleFont(13),
   },
 
   item: {
@@ -328,6 +384,12 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 10,
   },
+
+  dataValueText: {marginRight: 15, width: 40},
+
+  itemInnerContainer: {alignItems: 'center', justifyContent: 'space-between'},
+
+  itemText: {color: colorPallete.black, marginRight: 12},
 });
 
 export default ResultScreen;

@@ -33,6 +33,10 @@ const AppProvider = ({children}) => {
     }
   };
 
+  const updateRecentData = newValue => {
+    setDataResult(newValue);
+  };
+
   const [paramAction, setParamAction] = useState(null);
   const updateParamAction = newValue => {
     setParamAction(newValue);
@@ -87,6 +91,7 @@ const AppProvider = ({children}) => {
         updateParamLimitValue,
         savedIPAddress,
         updateIPAddress,
+        updateRecentData,
       }}>
       {children}
     </AppContext.Provider>

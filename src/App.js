@@ -7,8 +7,12 @@ import {createDetailTables, createTables} from './db';
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    createTables();
-    createDetailTables();
+    createTables()
+      .then(() => console.log('success create user table'))
+      .catch(error => console.error('error creating user table: ', error));
+    createDetailTables()
+      .then(() => console.log('success create detail table'))
+      .catch(error => console.error('error creating detail table: ', error));
   }, []);
 
   return (
