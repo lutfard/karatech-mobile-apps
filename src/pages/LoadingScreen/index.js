@@ -25,7 +25,7 @@ const LoadingScreen = ({navigation}) => {
 
           if (newTime === 0) {
             console.log('kepanggil dong');
-            navigation.navigate('ResultScreen');
+            setTimeout(() => navigation.navigate('ResultScreen'), 1000);
           }
           return newTime;
         });
@@ -60,7 +60,7 @@ const LoadingScreen = ({navigation}) => {
         />
       ) : (
         <View style={styles.timerContainer}>
-          <Text style={styles.timer}>{timer} second</Text>
+          <Text style={styles.timer}>{timer < 0 ? 0 : timer} second</Text>
         </View>
       )}
     </View>

@@ -13,7 +13,7 @@ export const createTables = async () => {
   return new Promise((resolve, reject) => {
     db.transaction(async txn => {
       await txn.executeSql(
-        'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), action VARCHAR(255), type VARCHAR(255), gender VARCHAR(20), punch_time INTEGER, create_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL)',
+        'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), action VARCHAR(255), type VARCHAR(255), gender VARCHAR(255), punch_time INTEGER, create_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL)',
         [],
         (sqlTxn, res) => {
           console.log('table created successfully');
@@ -85,7 +85,7 @@ export const insertDataDetail = async payload => {
       );
       db.transaction(async txn => {
         await txn.executeSql(
-          'INSERT INTO details (action_id, axis_x, axis_y, axis_z, speed, created_date) VALUES (?, ?, ?, ?, ?, ?)',
+          'INSERT INTO details (action_id, axis_x, axis_y, axis_z, speed, create_date) VALUES (?, ?, ?, ?, ?, ?)',
           [
             payload[i].id,
             payload[i].AXIS_X,
@@ -128,8 +128,9 @@ export const getDataHistory = async () => {
                 name: item.name,
                 action: item.action,
                 type: item.type,
-                limit: item.limit,
-                created_date: item.created_date,
+                limit: item.punch_time,
+                create_date: item.create_date,
+                gender: item.gender,
               });
             }
 

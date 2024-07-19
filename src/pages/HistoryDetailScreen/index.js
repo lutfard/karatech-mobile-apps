@@ -103,6 +103,7 @@ const HistoryDetailScreen = ({navigation, route}) => {
 
   useEffect(() => {
     if (isFocused) {
+      console.log('data mas: ', data);
       getDataDetailHistory(data.id)
         .then(dataHist => {
           console.log('res data: ', dataHist);
@@ -146,7 +147,7 @@ const HistoryDetailScreen = ({navigation, route}) => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={resultData.DATA}
+          data={resultData}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}
@@ -156,7 +157,7 @@ const HistoryDetailScreen = ({navigation, route}) => {
               index={index}
             />
           )}
-          keyExtractor={item => item.SPEED}
+          keyExtractor={(item, index) => index}
           contentContainerStyle={styles.flatListContainer}
         />
         <View style={styles.bottomContentContainer}>

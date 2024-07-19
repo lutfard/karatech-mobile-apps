@@ -84,7 +84,7 @@ const HistoryScreen = ({navigation}) => {
           <CardItem
             name={item.name}
             action={item.action}
-            recordDate={item.created_data}
+            recordDate={item.create_date}
             onPress={() => navigation.navigate('HistoryDetail', {data: item})}
           />
         )}

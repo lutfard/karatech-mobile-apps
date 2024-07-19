@@ -80,6 +80,8 @@ const InputHomeScreen = ({navigation}) => {
       limit: paramLimitValue,
     };
 
+    console.log('payload: ', payload);
+
     insertData(payload)
       .then(() => console.log('Data inserted successfully'))
       .catch(error => console.error('Error inserting data:', error));
