@@ -6,8 +6,8 @@ const result = {
     {
       AXIS_X: 4870.0,
       AXIS_Y: 0.0,
-      AXIS_Z: 0.28,
-      SPEED: 25.0,
+      AXIS_Z: 0.28123,
+      SPEED: 2500222222.0,
     },
     {
       AXIS_X: 4679.0,

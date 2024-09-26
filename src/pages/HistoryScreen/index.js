@@ -26,11 +26,11 @@ const CardItem = ({name, action, recordDate, onPress}) => (
   <TouchableOpacity
     style={[styles.cardItemContainer, general.card]}
     onPress={onPress}>
-    <View style={[styles.row, flexDirection.row]}>
+    <View style={styles.cardContentContainer}>
       <View style={styles.boxIcon}>
         <Image source={iconUserWhite} />
       </View>
-      <View style={flexDirection.row}>
+      <View style={(flexDirection.row, {flex: 1})}>
         <View style={[styles.textarea, flexDirection.col]}>
           <Text
             style={[
@@ -40,7 +40,7 @@ const CardItem = ({name, action, recordDate, onPress}) => (
             ]}>
             {name}
           </Text>
-          <View style={[flexDirection.row]}>
+          <View style={styles.cardDateContainer}>
             <Text>{action}</Text>
             <Text style={styles.cardItemDate}>{recordDate}</Text>
           </View>
@@ -59,7 +59,6 @@ const HistoryScreen = ({navigation}) => {
       getDataHistory()
         .then(dataHist => {
           console.log('history user list: ', dataHist);
-
           setHistData(dataHist);
         })
         .catch(error => {
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 
-  flatlistContainer: {flex: 1, paddingHorizontal: 24},
+  flatlistContainer: {paddingHorizontal: 24},
 
   boxIcon: {
     width: 37,
@@ -138,11 +137,21 @@ const styles = StyleSheet.create({
   textarea: {
     marginLeft: 10,
     justifyContent: 'center',
+    flex: 1,
   },
 
-  cardItemContainer: {marginBottom: 10},
+  cardItemContainer: {marginBottom: 10, flex: 1},
 
-  cardItemDate: {marginLeft: 90},
+  cardContentContainer: {flex: 1, flexDirection: 'row'},
+
+  cardDateContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginRight: 10,
+  },
+
+  // cardItemDate: {marginLeft: 90},
 });
 
 export default HistoryScreen;
