@@ -23,9 +23,10 @@ import {useIsFocused} from '@react-navigation/native';
 import scaleFont from '../../style/FontScaler';
 import Dimension from '../../style/Dimension';
 import Colors from '../../style/Color';
+import result from '../../dummy/dummy';
 
 const DataValue = ({label, value}) => (
-  <View style={flexDirection.row}>
+  <View style={styles.dataValueContainer}>
     <View style={styles.boxLabel}>
       <Text
         style={[{color: colorPallete.white}, textWeight[500], textSize[14]]}>
@@ -41,14 +42,13 @@ const DataValue = ({label, value}) => (
 const Item = ({x, y, z, speed, index}) => (
   <View style={styles.item}>
     <View style={[flexDirection.row, styles.itemInnerContainer]}>
-      <Text style={[styles.itemText, textSize[18], textWeight[800]]}>
+      <Text style={[styles.itemText, textSize[16], textWeight[800]]}>
         {index + 1}
       </Text>
       <DataValue label="X" value={x} />
       <DataValue label="Y" value={y} />
       <DataValue label="Z" value={z} />
-      <Text
-        style={[{color: colorPallete.black}, textSize[18], textWeight[800]]}>
+      <Text style={[styles.speedText, textSize[14], textWeight[800]]}>
         {speed} m/s
       </Text>
     </View>
@@ -147,7 +147,7 @@ const HistoryDetailScreen = ({navigation, route}) => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={resultData}
+          data={result.DATA}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}
@@ -278,12 +278,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginVertical: 5,
     borderBottomWidth: 1,
-    alignItems: 'center',
     borderBottomColor: '#B6B6B6',
+    flex: 1,
   },
 
   title: {
     fontSize: 18,
+  },
+
+  dataValueContainer: {
+    flex: 0.2,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   boxLabel: {
@@ -295,7 +302,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colorPallete.primary,
-    opacity: 50,
+    // opacity: 50,
   },
 
   buttonGreen: {
@@ -328,9 +335,19 @@ const styles = StyleSheet.create({
 
   dataValueText: {marginRight: 15, width: 40},
 
-  itemInnerContainer: {alignItems: 'center', justifyContent: 'space-between'},
+  itemInnerContainer: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    flexWrap: 'wrap',
+  },
 
-  itemText: {color: colorPallete.black, marginRight: 12},
+  itemText: {
+    color: colorPallete.black,
+    // flex: 0.1,
+  },
+
+  speedText: {color: colorPallete.black, flex: 0.15},
 });
 
 export default HistoryDetailScreen;

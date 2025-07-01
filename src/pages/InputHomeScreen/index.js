@@ -14,10 +14,10 @@ import scaleFont from '../../style/FontScaler';
 import Colors from '../../style/Color';
 import {Icon} from '../../assets/icon/Icon';
 import axios from 'axios';
-import {url_postData} from '../../api/endpoint';
+import {url_postData, url_postDataReps} from '../../api/endpoint';
 
 const InputHomeScreen = ({navigation}) => {
-  const {paramName, updateParamName} = useAppContext();
+  const {paramName, updateParamName, paramAction} = useAppContext();
   const {paramGender, updateParamGender} = useAppContext();
   const {paramSide, updateParamSide} = useAppContext();
   const {paramLimit, updateParamLimit} = useAppContext();
@@ -30,15 +30,15 @@ const InputHomeScreen = ({navigation}) => {
   ];
 
   const optionTimer = [
+    {label: '3s', value: 3},
+    {label: '5s', value: 5},
     {label: '10s', value: 10},
-    {label: '15s', value: 15},
-    {label: '25s', value: 25},
   ];
 
   const optionReps = [
+    {label: '3 reps', value: 3},
     {label: '5 reps', value: 5},
     {label: '10 reps', value: 10},
-    {label: '15 reps', value: 15},
   ];
 
   const selectedSide = value => {
@@ -58,9 +58,13 @@ const InputHomeScreen = ({navigation}) => {
     setIsLoading(true);
 
     try {
-      const post = await axios.post(url_postData, payload, {
-        headers: {'Content-Type': 'application/json'},
-      });
+      const post = await axios.post(
+        paramLimit === 'Timer' ? url_postData : url_postDataReps,
+        payload,
+        {
+          headers: {'Content-Type': 'application/json'},
+        },
+      );
 
       console.log('response: ', post);
       btnStartPress();
@@ -74,7 +78,7 @@ const InputHomeScreen = ({navigation}) => {
   const btnStartPress = () => {
     const payload = {
       name: paramName,
-      action: `Punch ${paramSide}`,
+      action: `${paramAction === 'punch' ? 'Punch' : 'Kick'} ${paramSide}`,
       type: paramLimit,
       gender: paramGender,
       limit: paramLimitValue,

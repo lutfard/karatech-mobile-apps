@@ -27,6 +27,7 @@ import axios from 'axios';
 import {url_getData} from '../../api/endpoint';
 import {LoadingComponent} from '../../components';
 import {deleteUser, getLatestUserData, insertDataDetail} from '../../db';
+import result from '../../dummy/dummy';
 
 const DataValue = ({label, value}) => (
   <View style={styles.dataValueContainer}>
@@ -67,6 +68,7 @@ Item.propTypes = {
 
 const ResultScreen = ({navigation}) => {
   const [resultData, setResultData] = useState(null);
+  const [realData, setRealData] = useState([]);
   const [latesUserData, setLatestUserData] = useState(null);
   const {
     paramName,
@@ -156,15 +158,20 @@ const ResultScreen = ({navigation}) => {
       });
 
       console.log('response: ', response.data);
+
+      setResultData(response.data);
+
       if (paramLimit === 'Repetition') {
         console.log('reps');
 
-        let limit = paramLimit - 1;
-        let sliceData = response.data.slice(0, limit);
-        setResultData(sliceData);
+        let limit = paramLimitValue;
+        let sliceData = response.data.DATA.slice(0, limit);
+        console.log('slice data: ', sliceData);
+
+        setRealData(sliceData);
       } else {
         console.log('timer');
-        setResultData(response.data);
+        setRealData(response.data.DATA);
       }
     } catch (error) {
       console.log('error: ', error);
@@ -215,7 +222,7 @@ const ResultScreen = ({navigation}) => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={resultData?.DATA || []}
+          data={result.DATA}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}
@@ -225,7 +232,7 @@ const ResultScreen = ({navigation}) => {
               index={index}
             />
           )}
-          keyExtractor={item => item.SPEED}
+          keyExtractor={(item, index) => index}
           contentContainerStyle={styles.flatListContainer}
         />
         <View style={styles.bottomContentContainer}>
