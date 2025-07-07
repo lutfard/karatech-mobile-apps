@@ -14,7 +14,7 @@ import scaleFont from '../../style/FontScaler';
 import Colors from '../../style/Color';
 import {Icon} from '../../assets/icon/Icon';
 import axios from 'axios';
-import {url_postData, url_postDataReps} from '../../api/endpoint';
+import {url_postData} from '../../api/endpoint';
 
 const InputHomeScreen = ({navigation}) => {
   const {paramName, updateParamName, paramAction} = useAppContext();
@@ -53,18 +53,16 @@ const InputHomeScreen = ({navigation}) => {
     const payload = {
       command: true,
       time: paramLimitValue,
+      type: paramAction,
+      mode: paramLimit,
     };
 
     setIsLoading(true);
 
     try {
-      const post = await axios.post(
-        paramLimit === 'Timer' ? url_postData : url_postDataReps,
-        payload,
-        {
-          headers: {'Content-Type': 'application/json'},
-        },
-      );
+      const post = await axios.post(url_postData, payload, {
+        headers: {'Content-Type': 'application/json'},
+      });
 
       console.log('response: ', post);
       btnStartPress();
