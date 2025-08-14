@@ -81,10 +81,16 @@ const ResultScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const saveButtonHandler = () => {
-    Alert.alert('Save Data', 'Anda yakin akan menyimpan data ini?', [
-      {text: 'Ya', onPress: btnSavePress},
-      {text: 'Tidak'},
-    ]);
+    if (resultData.DATA.length > 0) {
+      Alert.alert('Save Data', 'Anda yakin akan menyimpan data ini?', [
+        {text: 'Tidak'},
+        {text: 'Ya', onPress: btnSavePress},
+      ]);
+    } else {
+      Alert.alert('Tidak ada data', 'Tidak ada data yang dapat disimpan', [
+        {text: 'OK'},
+      ]);
+    }
   };
 
   const btnSavePress = () => {
@@ -222,7 +228,7 @@ const ResultScreen = ({navigation}) => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={result.DATA}
+          data={resultData?.DATA || []}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}

@@ -147,7 +147,7 @@ const HistoryDetailScreen = ({navigation, route}) => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={result.DATA}
+          data={resultData}
           renderItem={({item, index}) => (
             <Item
               x={item.AXIS_X}
